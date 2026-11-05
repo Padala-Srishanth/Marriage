@@ -1,0 +1,146 @@
+// Personal names stay in English in both languages, as supplied by the family.
+export const strings = {
+  en: {
+    openInvitation: 'Open the invitation',
+    openSilently: 'Open without music',
+    lenkalas: "Lenkala's",
+    weddingInvitation: 'Wedding Invitation',
+    heroInvite: 'With love and blessings, we invite you to celebrate the wedding of',
+    dateLong: '21 November 2026',
+    timeLagnam: '10:04 AM  |  Dhanur Lagnam',
+    venueShort: 'C.C. Gardens, Siddipet',
+    scroll: 'Scroll down',
+
+    invitationEyebrow: 'The Invitation',
+    tapToOpen: 'Tap the seal to open',
+    openCard: 'Open the invitation card',
+    closeCard: 'Close the card',
+    invitationMessage:
+      'With immense happiness and the blessings of our elders, we cordially invite you to grace the auspicious occasion of the wedding of our beloved children.',
+    groomLabel: 'Groom',
+    brideLabel: 'Bride',
+    brideParents: "Bride's parents",
+    hostedBy: 'Hosted by',
+
+    theGroom: 'The Groom',
+    theBride: 'The Bride',
+    coupleNarrative: 'Two beautiful journeys, two loving families, and one unforgettable beginning.',
+
+    countdownHeading: 'The Celebration Begins In',
+    days: 'Days',
+    hours: 'Hours',
+    minutes: 'Minutes',
+    seconds: 'Seconds',
+    countdownDone: 'Today, two hearts become one beautiful journey.',
+    countdownNote: '21 November 2026, 10:04 AM IST',
+
+    detailsHeading: 'The Wedding Ceremony',
+    muhurtham: 'Wedding Muhurtham',
+    dateFull: 'Saturday, 21 November 2026',
+    amSuffix: 'AM',
+    lagnam: 'Dhanur Lagnam',
+    venue: 'Venue',
+    venueName: 'C.C. Gardens',
+    venueAddress: 'Karimnagar Road,\nSiddipet, Telangana.',
+    lunch: 'Lunch',
+    lunchText: 'Follows the Marriage.',
+    googleCalendar: 'Add to Google Calendar',
+    icsCalendar: 'Download calendar file',
+
+    venueHeading: 'Where the Celebration Happens',
+    venueLine: 'Karimnagar Road, Siddipet.',
+    directions: 'Get Directions',
+    mapTitle: 'Map showing C.C. Gardens, Karimnagar Road, Siddipet',
+    openMap: 'View on Google Maps',
+
+    familyHeading: 'With the Blessings of Our Elders',
+
+    shareHeading: 'Share this invitation',
+    whatsapp: 'Share on WhatsApp',
+    copyLink: 'Copy link',
+    copied: 'Link copied',
+    shareMessage:
+      "Lenkala's Wedding Invitation: Poornachander & Thanvika, Saturday, 21 November 2026, 10:04 AM, C.C. Gardens, Siddipet.",
+    footerLine1: 'Your presence is our greatest gift.',
+    footerLine2: 'Your blessings are our greatest treasure.',
+    withLove: 'With love,',
+    family: "Lenkala's Family",
+
+    musicOn: 'Play music',
+    musicOff: 'Pause music',
+    switchLanguage: 'తెలుగులో చూడండి',
+  },
+  te: {
+    openInvitation: 'ఆహ్వానాన్ని తెరవండి',
+    openSilently: 'సంగీతం లేకుండా తెరవండి',
+    lenkalas: "Lenkala's",
+    weddingInvitation: 'వివాహ ఆహ్వానం',
+    heroInvite: 'ప్రేమతో, ఆశీస్సులతో ఈ శుభ వివాహానికి మిమ్మల్ని సాదరంగా ఆహ్వానిస్తున్నాము',
+    dateLong: '21 నవంబర్ 2026',
+    timeLagnam: 'ఉదయం 10:04  |  ధనుర్ లగ్నం',
+    venueShort: 'సి.సి. గార్డెన్స్, సిద్దిపేట',
+    scroll: 'కిందకు జరపండి',
+
+    invitationEyebrow: 'ఆహ్వాన పత్రిక',
+    tapToOpen: 'తెరవడానికి ముద్రను నొక్కండి',
+    openCard: 'ఆహ్వాన పత్రికను తెరవండి',
+    closeCard: 'పత్రికను మూసివేయండి',
+    invitationMessage:
+      'అపారమైన సంతోషంతో, మా పెద్దల ఆశీస్సులతో, మా ప్రియమైన పిల్లల వివాహ శుభకార్యానికి విచ్చేసి ఆశీర్వదించవలసిందిగా మిమ్మల్ని సాదరంగా ఆహ్వానిస్తున్నాము.',
+    groomLabel: 'వరుడు',
+    brideLabel: 'వధువు',
+    brideParents: 'వధువు తల్లిదండ్రులు',
+    hostedBy: 'ఆహ్వానించువారు',
+
+    theGroom: 'వరుడు',
+    theBride: 'వధువు',
+    coupleNarrative: 'రెండు అందమైన ప్రయాణాలు, రెండు ప్రేమగల కుటుంబాలు, ఒక మరపురాని శుభారంభం.',
+
+    countdownHeading: 'శుభ ముహూర్తానికి ఇంకా',
+    days: 'రోజులు',
+    hours: 'గంటలు',
+    minutes: 'నిమిషాలు',
+    seconds: 'సెకన్లు',
+    countdownDone: 'ఈ రోజు, రెండు హృదయాలు ఒకే అందమైన ప్రయాణంగా మారుతున్నాయి.',
+    countdownNote: '21 నవంబర్ 2026, ఉదయం 10:04 (IST)',
+
+    detailsHeading: 'వివాహ వేడుక',
+    muhurtham: 'వివాహ ముహూర్తం',
+    dateFull: 'శనివారం, 21 నవంబర్ 2026',
+    amSuffix: 'ఉదయం',
+    lagnam: 'ధనుర్ లగ్నం',
+    venue: 'వేదిక',
+    venueName: 'సి.సి. గార్డెన్స్',
+    venueAddress: 'కరీంనగర్ రోడ్,\nసిద్దిపేట, తెలంగాణ.',
+    lunch: 'భోజనం',
+    lunchText: 'వివాహం అనంతరం.',
+    googleCalendar: 'గూగుల్ క్యాలెండర్‌లో చేర్చండి',
+    icsCalendar: 'క్యాలెండర్ ఫైల్ డౌన్‌లోడ్ చేయండి',
+
+    venueHeading: 'వేడుక జరిగే ప్రదేశం',
+    venueLine: 'కరీంనగర్ రోడ్, సిద్దిపేట.',
+    directions: 'దారి చూడండి',
+    mapTitle: 'సి.సి. గార్డెన్స్, కరీంనగర్ రోడ్, సిద్దిపేట మ్యాప్',
+    openMap: 'గూగుల్ మ్యాప్స్‌లో చూడండి',
+
+    familyHeading: 'మా పెద్దల ఆశీస్సులతో',
+
+    shareHeading: 'ఈ ఆహ్వానాన్ని పంచుకోండి',
+    whatsapp: 'వాట్సాప్‌లో పంపండి',
+    copyLink: 'లింక్ కాపీ చేయండి',
+    copied: 'లింక్ కాపీ అయింది',
+    shareMessage:
+      "Lenkala's వివాహ ఆహ్వానం: Poornachander & Thanvika, శనివారం, 21 నవంబర్ 2026, ఉదయం 10:04, సి.సి. గార్డెన్స్, సిద్దిపేట.",
+    footerLine1: 'మీ రాకయే మాకు గొప్ప కానుక.',
+    footerLine2: 'మీ ఆశీస్సులే మాకు గొప్ప నిధి.',
+    withLove: 'ప్రేమతో,',
+    family: "Lenkala's Family",
+
+    musicOn: 'సంగీతం వినండి',
+    musicOff: 'సంగీతం ఆపండి',
+    switchLanguage: 'View in English',
+  },
+} as const
+
+export type Lang = keyof typeof strings
+export type StringKey = keyof (typeof strings)['en']
