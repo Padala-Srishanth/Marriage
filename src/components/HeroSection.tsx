@@ -26,7 +26,7 @@ export function HeroSection({ started }: { started: boolean }) {
   return (
     <section
       aria-label={t('weddingInvitation')}
-      className="relative isolate flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-burgundy-night px-[46px] pb-24 pt-[120px] text-center text-champagne sm:px-[110px] sm:pb-24 sm:pt-[132px]"
+      className="relative isolate flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-burgundy-night px-7 pb-24 pt-[118px] text-center text-champagne sm:px-[110px] sm:pb-24 sm:pt-[132px]"
     >
       {/* Lamp light pooling at the centre of the hall */}
       <div
@@ -51,13 +51,25 @@ export function HeroSection({ started }: { started: boolean }) {
 
       <MandapPillar side="left" />
       <MandapPillar side="right" />
+      {/* On phones the pillars give way to a carved arch window around the text */}
+      <svg
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-3 bottom-[46px] top-[92px] z-[1] h-[calc(100%-138px)] w-[calc(100%-24px)] sm:hidden"
+        fill="none"
+        stroke="#C6A15B"
+      >
+        <path d="M1 100 V 22 C 1 12 14 8 24 7 C 30 3 40 1 50 0 C 60 1 70 3 76 7 C 86 8 99 12 99 22 V 100" strokeWidth="1.3" vectorEffect="non-scaling-stroke" />
+        <path d="M4 100 V 24 C 4 15 16 11 26 10 C 32 6 41 4 50 3 C 59 4 68 6 74 10 C 84 11 96 15 96 24 V 100" strokeWidth="1" strokeOpacity="0.5" vectorEffect="non-scaling-stroke" />
+      </svg>
       <MandapCanopy />
-      <MandapFloor />
+      <MandapFloor lit={started} />
 
       <div className="relative z-[3] flex w-full max-w-3xl flex-col items-center">
         <motion.p
           lang="te"
-          className="font-telugu text-[1.15rem] leading-snug text-gold-light sm:text-2xl"
+          className="font-telugu text-[1.2rem] leading-snug text-gold-light sm:text-2xl"
           variants={rise}
           custom={0.5}
           initial="hidden"
@@ -67,8 +79,8 @@ export function HeroSection({ started }: { started: boolean }) {
         </motion.p>
 
         <motion.div className="mt-3 sm:mt-5" variants={rise} custom={0.75} initial="hidden" animate={state}>
-          <p className="font-caps text-lg uppercase tracking-[0.42em] text-ivory sm:text-2xl">{t('lenkalas')}</p>
-          <p className="mt-1 font-caps text-[0.68rem] uppercase tracking-[0.3em] text-champagne sm:text-sm">
+          <p className="font-caps text-xl uppercase tracking-[0.42em] text-ivory sm:text-2xl">{t('lenkalas')}</p>
+          <p className="mt-1 font-caps text-[0.72rem] uppercase tracking-[0.3em] text-champagne sm:text-sm">
             {t('weddingInvitation')}
           </p>
         </motion.div>
@@ -85,7 +97,7 @@ export function HeroSection({ started }: { started: boolean }) {
 
         <h1 className="my-1 flex flex-col items-center">
           <motion.span
-            className="gold-text inline-block px-[0.3em] py-[0.1em] font-script text-[clamp(3.1rem,min(14vw,10.5vh),7.6rem)] leading-[1.05] drop-shadow-[0_2px_14px_rgba(255,214,150,0.25)]"
+            className="gold-text inline-block px-[0.3em] py-[0.1em] font-script text-[clamp(3.1rem,min(15vw,10.5vh),7.6rem)] leading-[1.05] drop-shadow-[0_2px_14px_rgba(255,214,150,0.25)]"
             variants={inked}
             custom={1.15}
             initial="hidden"
@@ -102,7 +114,7 @@ export function HeroSection({ started }: { started: boolean }) {
             &amp;
           </motion.span>
           <motion.span
-            className="gold-text inline-block px-[0.3em] py-[0.1em] font-script text-[clamp(3.1rem,min(14vw,10.5vh),7.6rem)] leading-[1.05] drop-shadow-[0_2px_14px_rgba(255,214,150,0.25)]"
+            className="gold-text inline-block px-[0.3em] py-[0.1em] font-script text-[clamp(3.1rem,min(15vw,10.5vh),7.6rem)] leading-[1.05] drop-shadow-[0_2px_14px_rgba(255,214,150,0.25)]"
             variants={inked}
             custom={2.7}
             initial="hidden"

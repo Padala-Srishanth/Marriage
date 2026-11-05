@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { wedding } from '../data/wedding'
 import { useLanguage } from '../i18n/LanguageContext'
 import { Reveal } from './Reveal'
-import { CornerFlourish, Kalash, Lotus, Mandala, OrnamentRule, ScallopEdge } from './ornaments/Motifs'
+import { CornerFlourish, Kalash, Mandala, OrnamentRule, ScallopEdge } from './ornaments/Motifs'
 
 const unfold = { duration: 1.45, ease: [0.6, 0.02, 0.2, 1] as const }
 
@@ -51,22 +51,54 @@ export function InvitationSection() {
           <div className="relative w-full" style={{ perspective: '1800px' }}>
             {/* The inside of the card */}
             <div className="relative overflow-hidden bg-[#FFFDF6] px-6 py-12 text-center shadow-[0_24px_70px_rgba(58,8,22,0.25)] sm:px-14 sm:py-16">
+              {open && (
+                <svg aria-hidden="true" className="pointer-events-none absolute inset-3 h-[calc(100%-1.5rem)] w-[calc(100%-1.5rem)]" preserveAspectRatio="none" viewBox="0 0 100 100" fill="none">
+                  <motion.rect
+                    x="0.5"
+                    y="0.5"
+                    width="99"
+                    height="99"
+                    stroke="#C6A15B"
+                    strokeWidth="1.2"
+                    vectorEffect="non-scaling-stroke"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 2.4, delay: 0.9, ease: 'easeInOut' }}
+                  />
+                </svg>
+              )}
               <CornerFlourish className="absolute left-2 top-2 h-14 w-14 text-gold-ink sm:h-20 sm:w-20" />
               <CornerFlourish className="absolute right-2 top-2 h-14 w-14 -scale-x-100 text-gold-ink sm:h-20 sm:w-20" />
               <CornerFlourish className="absolute bottom-2 left-2 h-14 w-14 -scale-y-100 text-gold-ink sm:h-20 sm:w-20" />
               <CornerFlourish className="absolute bottom-2 right-2 h-14 w-14 -scale-100 text-gold-ink sm:h-20 sm:w-20" />
 
               <div className="relative flex flex-col items-center gap-5">
-                <Lotus className="h-7 w-14 text-gold-ink" />
+                <Kalash bloom={open} className="h-16 w-12 text-gold-ink" />
                 <p className="max-w-md font-serif text-xl italic leading-snug text-ink sm:text-[1.45rem]">{t('invitationMessage')}</p>
                 <OrnamentRule className="text-gold-ink" />
 
                 <dl className="flex w-full flex-col items-center gap-1.5">
                   <dt className="font-caps text-xs uppercase tracking-[0.3em] text-gold-ink">{t('groomLabel')}</dt>
-                  <dd className="font-serif text-[1.85rem] font-medium leading-tight text-burgundy sm:text-4xl">{wedding.groom.formal}</dd>
+                  <motion.dd
+                    key={`groom-${open}`}
+                    className="font-serif text-[1.85rem] font-medium leading-tight text-burgundy sm:text-4xl"
+                    initial={open ? { clipPath: 'inset(0 100% 0 0)' } : false}
+                    animate={{ clipPath: 'inset(0 0% 0 0)' }}
+                    transition={{ duration: 1.4, delay: 1.1, ease: [0.45, 0, 0.2, 1] }}
+                  >
+                    {wedding.groom.formal}
+                  </motion.dd>
                   <dd aria-hidden="true" className="font-script text-4xl leading-none text-gold-ink">&amp;</dd>
                   <dt className="font-caps text-xs uppercase tracking-[0.3em] text-gold-ink">{t('brideLabel')}</dt>
-                  <dd className="font-serif text-[1.85rem] font-medium leading-tight text-burgundy sm:text-4xl">{wedding.bride.formal}</dd>
+                  <motion.dd
+                    key={`bride-${open}`}
+                    className="font-serif text-[1.85rem] font-medium leading-tight text-burgundy sm:text-4xl"
+                    initial={open ? { clipPath: 'inset(0 100% 0 0)' } : false}
+                    animate={{ clipPath: 'inset(0 0% 0 0)' }}
+                    transition={{ duration: 1.4, delay: 2.3, ease: [0.45, 0, 0.2, 1] }}
+                  >
+                    {wedding.bride.formal}
+                  </motion.dd>
                 </dl>
 
                 <OrnamentRule className="text-gold-ink" />

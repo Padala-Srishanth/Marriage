@@ -4,11 +4,11 @@
 const venueQuery = 'C.C. Gardens, Karimnagar Road, Siddipet, Telangana'
 
 export const wedding = {
-  groom: { short: 'Poornachander', formal: 'Ch. Poornachander', monogram: 'P', photo: '' },
+  groom: { short: 'Purnachander', formal: 'Ch. Purnachander', monogram: 'P', photo: '' },
   bride: { short: 'Thanvika', formal: 'Ch. La. Sow. Thanvika', monogram: 'T', photo: '' },
   brideParents: 'Smt. & Sri. Poshinashetty Vanitha – Srinivas, Siddipet',
   hosts: 'Lenkala Krishnaveni – Srinivas',
-  elders: ['Lenkala Satt evva – Balakistaiah', 'Gopu Narsavva – Prathap'],
+  elders: ['Lenkala Sattevva – Balakistaiah', 'Gopu Narsavva – Prathap'],
 
   // 10:04 AM India Standard Time
   muhurtham: new Date('2026-11-21T10:04:00+05:30'),

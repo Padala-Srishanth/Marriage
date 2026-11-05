@@ -42,11 +42,20 @@ export function Mandala({ draw = false, ...props }: SVGProps<SVGSVGElement> & { 
 }
 
 /** A purna kalash: brass pot, mango leaves, coconut. */
-export function Kalash(props: SVGProps<SVGSVGElement>) {
+export function Kalash({ bloom, ...props }: SVGProps<SVGSVGElement> & { bloom?: boolean }) {
   return (
     <svg viewBox="0 0 120 150" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true" {...props}>
       {[-58, -36, -14, 14, 36, 58].map((angle) => (
-        <path key={angle} d="M60 62 C 52 48, 52 30, 60 16 C 68 30, 68 48, 60 62 Z M60 60 V 22" transform={`rotate(${angle} 60 62)`} strokeWidth="1" />
+        <g key={angle} transform={`rotate(${angle} 60 62)`}>
+          {/* With bloom set, the mango leaves unfold from the centre outwards */}
+          <motion.path
+            d="M60 62 C 52 48, 52 30, 60 16 C 68 30, 68 48, 60 62 Z M60 60 V 22"
+            strokeWidth="1"
+            initial={bloom === undefined ? false : { pathLength: 0 }}
+            animate={bloom === undefined ? undefined : { pathLength: bloom ? 1 : 0 }}
+            transition={{ duration: 0.9, delay: 0.6 + (Math.abs(angle) / 22) * 0.25, ease: 'easeOut' }}
+          />
+        </g>
       ))}
       <path d="M60 14 C 45 18, 42 38, 46 50 H 74 C 78 38, 75 18, 60 14 Z" fill="var(--kalash-fill, none)" />
       <path d="M46 56 H 74 M42 62 H 78" strokeWidth="1.8" />
@@ -104,14 +113,18 @@ export function ScallopEdge({ color }: { color: string }) {
   const width = 1440 / lobes
   const path = Array.from({ length: lobes }, () => `q ${width / 2} 44 ${width} 0`).join(' ')
   return (
-    <svg
+    <motion.svg
       viewBox="0 0 1440 24"
       preserveAspectRatio="none"
       aria-hidden="true"
       className="pointer-events-none absolute inset-x-0 top-0 z-10 h-4 w-full sm:h-6"
+      initial={{ clipPath: 'inset(0 50% 0 50%)' }}
+      whileInView={{ clipPath: 'inset(0 0% 0 0%)' }}
+      viewport={{ once: true }}
+      transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
     >
       <path d={`M0 0 ${path} V 0 Z`} fill={color} />
-    </svg>
+    </motion.svg>
   )
 }
 

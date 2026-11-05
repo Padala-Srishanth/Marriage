@@ -1,6 +1,6 @@
 import { wedding } from '../data/wedding'
 
-const title = 'Wedding of Poornachander & Thanvika'
+const title = 'Wedding of Purnachander & Thanvika'
 const description = "Lenkala's Wedding Invitation. Muhurtham at 10:04 AM IST, Dhanur Lagnam. Lunch follows the marriage."
 
 // 2026-11-21T04:34:00.000Z -> 20261121T043400Z
@@ -39,7 +39,7 @@ export function icsContent() {
     'PRODID:-//Lenkala Wedding//Invitation//EN',
     'CALSCALE:GREGORIAN',
     'BEGIN:VEVENT',
-    'UID:poornachander-thanvika-20261121@lenkala-wedding',
+    'UID:purnachander-thanvika-20261121@lenkala-wedding',
     `DTSTAMP:${start}`,
     `DTSTART:${start}`,
     `DTEND:${end}`,
@@ -56,7 +56,7 @@ export function downloadIcs() {
   const url = URL.createObjectURL(new Blob([icsContent()], { type: 'text/calendar;charset=utf-8' }))
   const link = document.createElement('a')
   link.href = url
-  link.download = 'poornachander-thanvika-wedding.ics'
+  link.download = 'purnachander-thanvika-wedding.ics'
   link.click()
   setTimeout(() => URL.revokeObjectURL(url), 1000)
 }

@@ -10,22 +10,29 @@ import { OrnamentRule, ScallopEdge } from './ornaments/Motifs'
 // section's scroll progress, from 0 (section top reaches the screen top)
 // to 1 (section bottom reaches the screen bottom).
 const BEATS: Record<string, [number, number]> = {
-  enter: [0, 0.12],
-  curtain: [0.14, 0.28],
-  approach: [0.3, 0.42],
-  garlandToBride: [0.44, 0.52],
-  garlandToGroom: [0.53, 0.61],
-  rice: [0.63, 0.8],
-  knot: [0.8, 0.9],
-  names: [0.9, 0.97],
+  enter: [0, 0.1],
+  curtain: [0.12, 0.22],
+  approach: [0.24, 0.32],
+  jeelakarra: [0.33, 0.4],
+  garlandToBride: [0.42, 0.48],
+  garlandToGroom: [0.49, 0.55],
+  mangalsutra: [0.57, 0.64],
+  rice: [0.65, 0.76],
+  fire: [0.75, 0.79],
+  saptapadi: [0.79, 0.88],
+  knot: [0.88, 0.92],
+  names: [0.92, 0.97],
 }
 
 const CAPTIONS: { key: StringKey; range: readonly [number, number] }[] = [
-  { key: 'sceneTera', range: [0, 0.2] },
-  { key: 'sceneMuhurtham', range: [0.2, 0.42] },
-  { key: 'sceneGarlands', range: [0.42, 0.62] },
-  { key: 'sceneTalambralu', range: [0.62, 0.8] },
-  { key: 'sceneTogether', range: [0.8, 1.01] },
+  { key: 'sceneTera', range: [0, 0.12] },
+  { key: 'sceneMuhurtham', range: [0.12, 0.32] },
+  { key: 'sceneJeelakarra', range: [0.32, 0.41] },
+  { key: 'sceneGarlands', range: [0.41, 0.56] },
+  { key: 'sceneMangalsutra', range: [0.56, 0.65] },
+  { key: 'sceneTalambralu', range: [0.65, 0.78] },
+  { key: 'sceneSaptapadi', range: [0.78, 0.88] },
+  { key: 'sceneTogether', range: [0.88, 1.01] },
 ]
 
 const FLOOR = 452
@@ -68,6 +75,62 @@ function Grain({ progress, grain }: { progress: MotionValue<number>; grain: (typ
   )
 }
 
+// Jeelakarra bellam: a paste of cumin and jaggery carried from one hand to the other's head
+function Paste({ progress, from, to, range: [start, end] }: { progress: MotionValue<number>; from: [number, number]; to: [number, number]; range: readonly [number, number] }) {
+  const t = useTransform(progress, [start, end], [0, 1])
+  const lift = 70
+  const x = useTransform(t, (v) => from[0] + (to[0] - from[0]) * v)
+  const y = useTransform(t, (v) => from[1] + (to[1] - from[1]) * v - lift * 4 * v * (1 - v))
+  const opacity = useTransform(progress, [start - 0.005, start, end, end + 0.06], [0, 1, 1, 0.65])
+  const halo = useTransform(progress, [end - 0.01, end + 0.02, end + 0.08], [0, 1, 0.35])
+  return (
+    <>
+      <motion.circle cx={to[0]} cy={to[1]} r="26" fill="url(#sceneGlow)" style={{ opacity: halo }} />
+      <motion.circle r="6" fill="#8B5A2B" stroke="#EBD49C" strokeWidth="1.5" style={{ x, y, opacity }} />
+    </>
+  )
+}
+
+function Sparkle({ progress, at, start }: { progress: MotionValue<number>; at: [number, number]; start: number }) {
+  const scale = useTransform(progress, [start, start + 0.012, start + 0.03], [0, 1.4, 0.8])
+  const opacity = useTransform(progress, [start, start + 0.008], [0, 1])
+  const [x, y] = at
+  return (
+    <motion.path
+      d={`M ${x} ${y - 8} L ${x + 2} ${y - 2} L ${x + 8} ${y} L ${x + 2} ${y + 2} L ${x} ${y + 8} L ${x - 2} ${y + 2} L ${x - 8} ${y} L ${x - 2} ${y - 2} Z`}
+      fill="#FFE3A6"
+      style={{ scale, opacity, originX: `${x}px`, originY: `${y}px` }}
+    />
+  )
+}
+
+// Saptapadi: seven footprints appear one by one around the sacred fire
+const STEPS = Array.from({ length: 7 }, (_, i) => {
+  const angle = Math.PI * (0.92 - (i / 6) * 0.84)
+  return {
+    x: CENTRE + Math.cos(angle) * 118,
+    y: FLOOR + 32 + Math.sin(angle) * 22,
+    turn: 90 - (angle * 180) / Math.PI,
+    start: BEATS.saptapadi[0] + (i / 7) * (BEATS.saptapadi[1] - BEATS.saptapadi[0]),
+  }
+})
+
+function Footprint({ progress, step }: { progress: MotionValue<number>; step: (typeof STEPS)[number] }) {
+  const opacity = useTransform(progress, [step.start, step.start + 0.01], [0, 1])
+  const glow = useTransform(progress, [step.start, step.start + 0.01, step.start + 0.04], [0, 1, 0.3])
+  return (
+    <g transform={`translate(${step.x} ${step.y}) rotate(${step.turn})`}>
+      <motion.circle r="14" fill="url(#sceneGlow)" style={{ opacity: glow }} />
+      <motion.g style={{ opacity }} fill="#C6A15B">
+        <ellipse cy="2" rx="4.2" ry="7" />
+        {[-3.4, -1.2, 1.2, 3.4].map((x, i) => (
+          <circle key={x} cx={x} cy={-7.5 + Math.abs(i - 1.5) * 0.8} r="1.3" />
+        ))}
+      </motion.g>
+    </g>
+  )
+}
+
 function useNarrow() {
   const [narrow, setNarrow] = useState(() => window.matchMedia('(max-width: 640px)').matches)
   useEffect(() => {
@@ -99,9 +162,11 @@ export function CoupleSection() {
   const groomGarlandY = useTransform(progress, BEATS.garlandToGroom, [-90, 0])
   const groomGarlandOpacity = useTransform(progress, [BEATS.garlandToGroom[0], BEATS.garlandToGroom[0] + 0.03], [0, 1])
 
+  const mangalsutra = useTransform(progress, [BEATS.mangalsutra[0], BEATS.mangalsutra[0] + 0.04], [0, 1])
+
   const knot = useTransform(progress, BEATS.knot, [0, 1])
-  const fireScale = useTransform(progress, [BEATS.rice[1], BEATS.knot[1]], [0.2, 1])
-  const fireOpacity = useTransform(progress, [BEATS.rice[1], BEATS.rice[1] + 0.03], [0, 1])
+  const fireScale = useTransform(progress, BEATS.fire, [0.2, 1])
+  const fireOpacity = useTransform(progress, [BEATS.fire[0], BEATS.fire[0] + 0.02], [0, 1])
   const glow = useTransform(progress, [BEATS.knot[0], 1], [0, 0.85])
 
   const namesOpacity = useTransform(progress, BEATS.names, [0, 1])
@@ -109,7 +174,7 @@ export function CoupleSection() {
   const hintOpacity = useTransform(progress, [0, 0.06], [1, 0])
   const bar = useTransform(progress, [0, 1], [0, 1])
 
-  const viewBox = narrow ? '165 60 470 430' : '60 40 680 470'
+  const viewBox = narrow ? '165 60 470 455' : '60 40 680 470'
 
   return (
     <section id="couple" ref={section} className="relative h-[460vh] bg-gradient-to-b from-champagne via-ivory to-champagne text-ink sm:h-[520vh]">
@@ -165,8 +230,29 @@ export function CoupleSection() {
               <motion.g style={{ y: brideGarlandY, opacity: brideGarlandOpacity }}>
                 <Garland />
               </motion.g>
+              {/* Mangalsutra, drawn on over the garland */}
+              <motion.path
+                d="M -14 -238 C -17 -214 -8 -199 0 -197 C 8 -199 17 -214 14 -238"
+                fill="none"
+                stroke="#FFE3A6"
+                strokeWidth="1.6"
+                style={{ pathLength: mangalsutra, opacity: mangalsutra }}
+              />
+              <motion.g style={{ opacity: mangalsutra }} fill="#F6E3B0" stroke="#70500F" strokeWidth="0.6">
+                <circle cx="-3.5" cy="-193" r="3.6" />
+                <circle cx="3.5" cy="-193" r="3.6" />
+              </motion.g>
             </g>
           </motion.g>
+
+          {/* Jeelakarra bellam, once the couple stand together */}
+          <Paste progress={progress} from={[336 + 52, FLOOR - 115]} to={[464, FLOOR - 288]} range={BEATS.jeelakarra} />
+          <Paste progress={progress} from={[464 - 48, FLOOR - 124]} to={[336, FLOOR - 290]} range={BEATS.jeelakarra} />
+
+          {/* The three knots of the mangalsutra */}
+          {[-9, 0, 9].map((dx, i) => (
+            <Sparkle key={dx} progress={progress} at={[464 + dx, FLOOR - 206 + Math.abs(dx) * 0.3]} start={BEATS.mangalsutra[0] + 0.03 + i * 0.012} />
+          ))}
 
           {/* Brahma mudi: the groom's kanduva knotted to the bride's pallu */}
           <motion.path
@@ -191,6 +277,11 @@ export function CoupleSection() {
           {/* Talambralu */}
           {GRAINS.map((grain, i) => (
             <Grain key={i} progress={progress} grain={grain} />
+          ))}
+
+          {/* Saptapadi */}
+          {STEPS.map((step, i) => (
+            <Footprint key={i} progress={progress} step={step} />
           ))}
 
           {/* Sacred fire */}

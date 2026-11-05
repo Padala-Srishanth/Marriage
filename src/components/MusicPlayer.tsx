@@ -2,9 +2,9 @@ import { Music2, VolumeX } from 'lucide-react'
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { wedding } from '../data/wedding'
 import { useLanguage } from '../i18n/LanguageContext'
-import { renderRaga } from '../lib/raga'
+import { QUICK_START_BARS, QUICK_START_SECONDS, renderRaga } from '../lib/raga'
 
-type MusicValue = { playing: boolean; play: () => void; pause: () => void }
+type MusicValue = { playing: boolean; play: () => void; pause: () => void; chime: () => void }
 
 const MusicContext = createContext<MusicValue | null>(null)
 
@@ -21,13 +21,13 @@ export function MusicProvider({ children }: { children: ReactNode }) {
 
   const startGenerated = useCallback(() => {
     // The context must be created inside the click for phones to allow sound.
-    if (!ctx.current) {
-      ctx.current = new AudioContext()
+    if (!master.current) {
+      ctx.current ??= new AudioContext()
       master.current = ctx.current.createGain()
       master.current.gain.value = 0
       master.current.connect(ctx.current.destination)
     }
-    const context = ctx.current
+    const context = ctx.current!
     const gain = master.current!
     void context.resume()
     gain.gain.cancelScheduledValues(context.currentTime)
@@ -35,13 +35,56 @@ export function MusicProvider({ children }: { children: ReactNode }) {
 
     if (!started.current) {
       started.current = true
-      void renderRaga().then((buffer) => {
-        const source = context.createBufferSource()
-        source.buffer = buffer
-        source.loop = true
-        source.connect(gain)
-        source.start()
+      // Play the quickly rendered opening, then hand over to the full loop
+      // at the matching point, so the music never waits on the slower render.
+      // Both renders start together; the full one usually finishes well before the handover.
+      const fullLoop = renderRaga()
+      void renderRaga(QUICK_START_BARS).then((opening) => {
+        const startedAt = context.currentTime + 0.05
+        const first = context.createBufferSource()
+        first.buffer = opening
+        first.connect(gain)
+        first.start(startedAt)
+
+        void fullLoop.then((loop) => {
+          const source = context.createBufferSource()
+          source.buffer = loop
+          source.loop = true
+          source.connect(gain)
+          const handover = startedAt + QUICK_START_SECONDS
+          if (context.currentTime < handover - 0.05) {
+            source.start(handover, QUICK_START_SECONDS)
+          } else {
+            const now = context.currentTime + 0.05
+            source.start(now, (now - startedAt) % loop.duration)
+          }
+        })
       })
+    }
+  }, [])
+
+  // A temple bell struck once: a few inharmonic partials with long decays
+  const chime = useCallback(() => {
+    ctx.current ??= new AudioContext()
+    const context = ctx.current
+    void context.resume()
+    const now = context.currentTime + 0.05
+    const partials: [number, number, number][] = [
+      [1, 0.22, 3.4],
+      [2.76, 0.1, 2.2],
+      [5.4, 0.05, 1.3],
+      [8.93, 0.025, 0.8],
+    ]
+    for (const [ratio, level, decay] of partials) {
+      const osc = context.createOscillator()
+      const gain = context.createGain()
+      osc.frequency.value = 523.25 * ratio
+      gain.gain.setValueAtTime(0.0001, now)
+      gain.gain.exponentialRampToValueAtTime(level, now + 0.012)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + decay)
+      osc.connect(gain).connect(context.destination)
+      osc.start(now)
+      osc.stop(now + decay + 0.1)
     }
   }, [])
 
@@ -80,7 +123,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
     return () => document.removeEventListener('visibilitychange', onVisibility)
   }, [playing])
 
-  const value = useMemo(() => ({ playing, play, pause }), [playing, play, pause])
+  const value = useMemo(() => ({ playing, play, pause, chime }), [playing, play, pause, chime])
   return <MusicContext.Provider value={value}>{children}</MusicContext.Provider>
 }
 

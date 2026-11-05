@@ -1,4 +1,4 @@
-# Poornachander & Thanvika Wedding Invitation
+# Purnachander & Thanvika Wedding Invitation
 
 ## Correct details or add photographs
 Everything the family supplied is in `src/data/wedding.ts`: names, venue, map link and photographs.

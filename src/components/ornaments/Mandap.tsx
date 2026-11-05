@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { Kalash } from './Motifs'
 
 function Swag({ x1, x2, y, sag }: { x1: number; x2: number; y: number; sag: number }) {
@@ -43,7 +44,7 @@ export function MandapCanopy() {
   const diamonds = Array.from({ length: 72 }, (_, i) => i * 20 + 10)
 
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[148px] sm:h-[196px]">
+    <div className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[112px] sm:h-[196px]">
       <svg viewBox="0 0 1440 220" preserveAspectRatio="xMidYMin slice" className="h-full w-full" aria-hidden="true">
         <defs>
           <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
@@ -89,7 +90,7 @@ export function MandapPillar({ side }: { side: 'left' | 'right' }) {
       viewBox="0 0 150 900"
       preserveAspectRatio={side === 'left' ? 'xMinYMax slice' : 'xMaxYMax slice'}
       aria-hidden="true"
-      className={`pointer-events-none absolute inset-y-0 z-[1] h-full w-[42px] sm:w-[90px] lg:w-[140px] ${side === 'left' ? 'left-0' : 'right-0'}`}
+      className={`pointer-events-none absolute inset-y-0 z-[1] hidden h-full sm:block sm:w-[90px] lg:w-[140px] ${side === 'left' ? 'left-0' : 'right-0'}`}
     >
       <defs>
         <linearGradient id={id} x1={1 - litEdge} y1="0" x2={litEdge} y2="0">
@@ -136,7 +137,7 @@ export function MandapPillar({ side }: { side: 'left' | 'right' }) {
   )
 }
 
-function Diya({ delay }: { delay: number }) {
+function Diya({ delay, lit, lightAfter }: { delay: number; lit: boolean; lightAfter: number }) {
   return (
     <svg viewBox="0 0 40 52" className="h-9 w-7 sm:h-12 sm:w-9" aria-hidden="true">
       <defs>
@@ -145,33 +146,40 @@ function Diya({ delay }: { delay: number }) {
           <stop offset="1" stopColor="#FFD98A" stopOpacity="0" />
         </radialGradient>
       </defs>
-      <g className="flicker" style={{ transformOrigin: '20px 30px', animationDelay: `${delay}s` }}>
-        <circle cx="20" cy="17" r="17" fill="url(#flameGlow)" />
-        <path d="M20 8 C 26 17, 25 26, 20 30 C 15 26, 14 17, 20 8 Z" fill="#FFC861" />
-        <path d="M20 16 C 23 21, 22 26, 20 29 C 18 26, 17 21, 20 16 Z" fill="#FFF3C9" />
-      </g>
+      <motion.g
+        style={{ originX: '20px', originY: '30px' }}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={lit ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+        transition={{ duration: 0.7, delay: lightAfter, ease: 'backOut' }}
+      >
+        <g className="flicker" style={{ transformOrigin: '20px 30px', animationDelay: `${delay}s` }}>
+          <circle cx="20" cy="17" r="17" fill="url(#flameGlow)" />
+          <path d="M20 8 C 26 17, 25 26, 20 30 C 15 26, 14 17, 20 8 Z" fill="#FFC861" />
+          <path d="M20 16 C 23 21, 22 26, 20 29 C 18 26, 17 21, 20 16 Z" fill="#FFF3C9" />
+        </g>
+      </motion.g>
       <path d="M2 31 C 6 48, 34 48, 38 31 C 28 35, 12 35, 2 31 Z" fill="#C6A15B" stroke="#70500F" strokeWidth="0.8" />
     </svg>
   )
 }
 
 /** The raised floor of the mandap, with its row of lit diyas. */
-export function MandapFloor() {
+export function MandapFloor({ lit }: { lit: boolean }) {
   const lamps = [-0.3, -1.1, -0.6, -1.5, -0.9, -0.2]
   return (
     <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[2]">
-      <div className="flex items-end justify-between px-[46px] sm:px-[110px] lg:px-[170px]">
+      <div className="flex items-end justify-between px-5 sm:px-[110px] lg:px-[170px]">
         <div className="flex gap-2 sm:gap-5">
           {lamps.slice(0, 3).map((delay, i) => (
             <div key={i} className={i === 2 ? 'hidden sm:block' : undefined}>
-              <Diya delay={delay} />
+              <Diya delay={delay} lit={lit} lightAfter={0.2 + (2 - i) * 0.3} />
             </div>
           ))}
         </div>
         <div className="flex gap-2 sm:gap-5">
           {lamps.slice(3).map((delay, i) => (
             <div key={i} className={i === 0 ? 'hidden sm:block' : undefined}>
-              <Diya delay={delay} />
+              <Diya delay={delay} lit={lit} lightAfter={0.2 + i * 0.3} />
             </div>
           ))}
         </div>

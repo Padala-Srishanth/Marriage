@@ -1,3 +1,3 @@
 # Marriage
 
-Poornachander & Thanvika Wedding Invitation
+Purnachander & Thanvika Wedding Invitation
