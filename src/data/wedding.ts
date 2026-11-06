@@ -29,7 +29,7 @@ export const wedding = {
   // Once hosted on its own address, they send that address instead.
   previewUrl: 'https://claude.ai/artifact/9r77vinhpTt8ijch7xEXrZ',
 
-  // Path to an .mp3 in /public, for example 'music.mp3'. Left empty, the site
-  // plays its own generated flute and tanpura piece.
-  musicUrl: '',
+  // The wedding song: an audio file in /public. Left empty, or where the file
+  // cannot load, the site plays its own generated flute and tanpura piece.
+  musicUrl: 'music.m4a',
 }

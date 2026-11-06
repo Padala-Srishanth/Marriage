@@ -18,6 +18,8 @@ export function MusicProvider({ children }: { children: ReactNode }) {
   const ctx = useRef<AudioContext | null>(null)
   const master = useRef<GainNode | null>(null)
   const started = useRef(false)
+  const songMissing = useRef(false)
+  const fade = useRef<number>()
 
   const startGenerated = useCallback(() => {
     // The context must be created inside the click for phones to allow sound.
@@ -90,9 +92,29 @@ export function MusicProvider({ children }: { children: ReactNode }) {
 
   const play = useCallback(() => {
     setPlaying(true)
-    if (wedding.musicUrl) {
-      audio.current ??= Object.assign(new Audio(wedding.musicUrl), { loop: true, volume: VOLUME })
-      void audio.current.play().catch(() => setPlaying(false))
+    if (wedding.musicUrl && !songMissing.current) {
+      audio.current ??= Object.assign(new Audio(wedding.musicUrl), { loop: true })
+      const track = audio.current
+      // Fade the song in after the temple bell rather than starting at full volume
+      window.clearInterval(fade.current)
+      track.volume = 0
+      void track
+        .play()
+        .then(() => {
+          fade.current = window.setInterval(() => {
+            track.volume = Math.min(track.volume + VOLUME / 15, VOLUME)
+            if (track.volume >= VOLUME) window.clearInterval(fade.current)
+          }, 100)
+        })
+        .catch((error: DOMException) => {
+          if (error.name === 'NotAllowedError') {
+            setPlaying(false)
+          } else {
+            // The file is missing or cannot be played here: use the generated music
+            songMissing.current = true
+            startGenerated()
+          }
+        })
     } else {
       startGenerated()
     }
@@ -100,6 +122,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
 
   const pause = useCallback(() => {
     setPlaying(false)
+    window.clearInterval(fade.current)
     audio.current?.pause()
     if (ctx.current && master.current) {
       const context = ctx.current
