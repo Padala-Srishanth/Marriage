@@ -10,6 +10,7 @@ import { HeroSection } from './components/HeroSection'
 import { InvitationSection } from './components/InvitationSection'
 import { LanguageToggle, MusicPlayer, MusicProvider } from './components/MusicPlayer'
 import { OpeningGate } from './components/OpeningGate'
+import { OurSong } from './components/OurSong'
 import { VenueSection } from './components/VenueSection'
 import { WeddingDetails } from './components/WeddingDetails'
 import { LanguageProvider } from './i18n/LanguageContext'
@@ -31,6 +32,7 @@ export default function App() {
             <WeddingDetails />
             <VenueSection />
             <FamilySection />
+            <OurSong />
           </main>
           <Footer />
           <FloatingDecorations />

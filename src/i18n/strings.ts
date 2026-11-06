@@ -76,6 +76,8 @@ export const strings = {
     withLove: 'With love,',
     family: "Lenkala's Family",
 
+    songHeading: 'Our Wedding Song',
+    songNote: 'The song plays when you open the invitation. Use the music button to pause it.',
     musicOn: 'Play music',
     musicOff: 'Pause music',
     switchLanguage: 'తెలుగులో చూడండి',
@@ -156,6 +158,8 @@ export const strings = {
     withLove: 'ప్రేమతో,',
     family: "Lenkala's Family",
 
+    songHeading: 'మా పెళ్లి పాట',
+    songNote: 'ఆహ్వానం తెరిచినప్పుడు ఈ పాట మొదలవుతుంది. ఆపడానికి సంగీతం బటన్ నొక్కండి.',
     musicOn: 'సంగీతం వినండి',
     musicOff: 'సంగీతం ఆపండి',
     switchLanguage: 'View in English',
