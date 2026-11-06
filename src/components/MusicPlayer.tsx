@@ -2,21 +2,9 @@ import { Music2, VolumeX } from 'lucide-react'
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { wedding } from '../data/wedding'
 import { useLanguage } from '../i18n/LanguageContext'
-import { isFramed } from '../lib/env'
 import { QUICK_START_BARS, QUICK_START_SECONDS, renderRaga } from '../lib/raga'
-import { loadYouTubeApi, YT_PAUSED, YT_PLAYING, type YouTubePlayer } from '../lib/youtube'
 
-type MusicValue = {
-  playing: boolean
-  play: () => void
-  pause: () => void
-  chime: () => void
-  /** Hands the provider the element the YouTube player should live in. */
-  attachSong: (host: HTMLElement | null) => void
-}
-
-// Previews inside another page's frame cannot load YouTube, so they keep the generated music.
-export const songOnYouTube = !!wedding.song.youtubeId && !isFramed
+type MusicValue = { playing: boolean; play: () => void; pause: () => void; chime: () => void }
 
 const MusicContext = createContext<MusicValue | null>(null)
 
@@ -30,72 +18,6 @@ export function MusicProvider({ children }: { children: ReactNode }) {
   const ctx = useRef<AudioContext | null>(null)
   const master = useRef<GainNode | null>(null)
   const started = useRef(false)
-  const song = useRef<YouTubePlayer | null>(null)
-  const songReady = useRef(false)
-  const wantSong = useRef(false)
-  const fade = useRef<number>()
-
-  const startSong = useCallback(() => {
-    const player = song.current
-    if (!player || !songReady.current) return
-    // Fade the song in rather than starting at full volume
-    window.clearInterval(fade.current)
-    let volume = 0
-    player.setVolume(0)
-    player.playVideo()
-    fade.current = window.setInterval(() => {
-      volume = Math.min(volume + 6, 80)
-      player.setVolume(volume)
-      if (volume >= 80) window.clearInterval(fade.current)
-    }, 120)
-    // Some phones refuse to start a video that the guest did not tap directly.
-    // If so, show the music as paused so the guest can start it themselves.
-    window.setTimeout(() => {
-      if (wantSong.current && player.getPlayerState() !== YT_PLAYING) setPlaying(false)
-    }, 3000)
-  }, [])
-
-  const attachSong = useCallback(
-    (host: HTMLElement | null) => {
-      if (!host || song.current) return
-      // The API replaces the element it is given, so it gets one React does not manage.
-      const mount = document.createElement('div')
-      host.appendChild(mount)
-      void loadYouTubeApi().then((api) => {
-        song.current = new api.Player(mount, {
-          host: 'https://www.youtube-nocookie.com',
-          videoId: wedding.song.youtubeId,
-          width: '100%',
-          height: '100%',
-          playerVars: {
-            start: wedding.song.start,
-            loop: 1,
-            playlist: wedding.song.youtubeId,
-            rel: 0,
-            playsinline: 1,
-            modestbranding: 1,
-          },
-          events: {
-            onReady: () => {
-              songReady.current = true
-              if (wantSong.current) startSong()
-            },
-            // Keep the music button in step when the guest uses the video's own controls
-            onStateChange: ({ data }) => {
-              if (data === YT_PLAYING) {
-                wantSong.current = true
-                setPlaying(true)
-              } else if (data === YT_PAUSED && !document.hidden) {
-                wantSong.current = false
-                setPlaying(false)
-              }
-            },
-          },
-        })
-      })
-    },
-    [startSong],
-  )
 
   const startGenerated = useCallback(() => {
     // The context must be created inside the click for phones to allow sound.
@@ -168,22 +90,16 @@ export function MusicProvider({ children }: { children: ReactNode }) {
 
   const play = useCallback(() => {
     setPlaying(true)
-    if (songOnYouTube) {
-      wantSong.current = true
-      startSong()
-    } else if (wedding.musicUrl) {
+    if (wedding.musicUrl) {
       audio.current ??= Object.assign(new Audio(wedding.musicUrl), { loop: true, volume: VOLUME })
       void audio.current.play().catch(() => setPlaying(false))
     } else {
       startGenerated()
     }
-  }, [startGenerated, startSong])
+  }, [startGenerated])
 
   const pause = useCallback(() => {
     setPlaying(false)
-    wantSong.current = false
-    window.clearInterval(fade.current)
-    song.current?.pauseVideo()
     audio.current?.pause()
     if (ctx.current && master.current) {
       const context = ctx.current
@@ -196,11 +112,9 @@ export function MusicProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const onVisibility = () => {
       if (document.hidden) {
-        if (wantSong.current) song.current?.pauseVideo()
         audio.current?.pause()
         void ctx.current?.suspend()
       } else if (playing) {
-        if (wantSong.current) song.current?.playVideo()
         void audio.current?.play()
         void ctx.current?.resume()
       }
@@ -209,7 +123,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
     return () => document.removeEventListener('visibilitychange', onVisibility)
   }, [playing])
 
-  const value = useMemo(() => ({ playing, play, pause, chime, attachSong }), [playing, play, pause, chime, attachSong])
+  const value = useMemo(() => ({ playing, play, pause, chime }), [playing, play, pause, chime])
   return <MusicContext.Provider value={value}>{children}</MusicContext.Provider>
 }
 

@@ -29,11 +29,6 @@ export const wedding = {
   // Once hosted on its own address, they send that address instead.
   previewUrl: 'https://claude.ai/artifact/9r77vinhpTt8ijch7xEXrZ',
 
-  // The wedding song, played through YouTube's own embedded player, which is
-  // shown in the "Our wedding song" section. Leave youtubeId empty to use the
-  // generated music instead. start is in seconds.
-  song: { youtubeId: 'uOT9g96YV4c', title: 'Pelli Pusthakam', start: 0 },
-
   // Path to an .mp3 in /public, for example 'music.mp3'. Left empty, the site
   // plays its own generated flute and tanpura piece.
   musicUrl: '',
